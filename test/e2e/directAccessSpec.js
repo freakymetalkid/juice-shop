@@ -1,4 +1,5 @@
 const config = require('config')
+const utils = require('../../lib/utils')
 let blueprint
 
 for (const product of config.get('products')) {
@@ -25,6 +26,14 @@ describe('/', () => {
     protractor.expect.challengeSolved({ challenge: 'Premium Paywall' })
   })
 
+  describe('challenge "privacyPolicyProof"', () => {
+    it('should be able to access proof url for reading the privacy policy', () => {
+      browser.driver.get(browser.baseUrl + '/we/may/also/instruct/you/to/refuse/all/reasonably/necessary/responsibility')
+    })
+
+    protractor.expect.challengeSolved({ challenge: 'Privacy Policy Tier 2' })
+  })
+
   describe('challenge "extraLanguage"', () => {
     it('should be able to access the Klingon translation file', () => {
       browser.driver.get(browser.baseUrl + '/assets/i18n/tlh_AA.json')
@@ -43,7 +52,7 @@ describe('/', () => {
 
   describe('challenge "securityPolicy"', () => {
     it('should be able to access the security.txt file', () => {
-      browser.driver.get(browser.baseUrl + '/security.txt')
+      browser.driver.get(browser.baseUrl + '/.well-known/security.txt')
     })
 
     protractor.expect.challengeSolved({ challenge: 'Security Policy' })
@@ -55,5 +64,13 @@ describe('/', () => {
     })
 
     protractor.expect.challengeSolved({ challenge: 'Email Leak' })
+  })
+
+  describe('challenge "accessLogDisclosure"', () => {
+    it('should be able to access today\'s access log file', () => {
+      browser.driver.get(browser.baseUrl + '/support/logs/access.log.' + utils.toISO8601(new Date()))
+    })
+
+    protractor.expect.challengeSolved({ challenge: 'Access Log' })
   })
 })

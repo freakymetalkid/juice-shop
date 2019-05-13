@@ -4,6 +4,7 @@ const utils = require('../lib/utils')
 const insecurity = require('../lib/insecurity')
 const jade = require('jade')
 const config = require('config')
+const themes = require('../views/themes/themes').themes
 
 module.exports = function getUserProfile () {
   return (req, res, next) => {
@@ -25,13 +26,14 @@ module.exports = function getUserProfile () {
           } else {
             username = '\\' + username
           }
+          const theme = themes[config.get('application.theme')]
           jadeTemplate = jadeTemplate.replace(/_username_/g, username)
           jadeTemplate = jadeTemplate.replace(/_emailHash_/g, insecurity.hash(user.dataValues.email))
           jadeTemplate = jadeTemplate.replace(/_title_/g, config.get('application.name'))
           jadeTemplate = jadeTemplate.replace(/_favicon_/g, favicon())
-          jadeTemplate = jadeTemplate.replace(/_bgColor_/g, 'black')
-          jadeTemplate = jadeTemplate.replace(/_textColor_/g, '#9d9d9d')
-          jadeTemplate = jadeTemplate.replace(/_navColor_/g, '#263238')
+          jadeTemplate = jadeTemplate.replace(/_bgColor_/g, theme.bgColor)
+          jadeTemplate = jadeTemplate.replace(/_textColor_/g, theme.textColor)
+          jadeTemplate = jadeTemplate.replace(/_navColor_/g, theme.navColor)
           const fn = jade.compile(jadeTemplate)
           res.send(fn(user.dataValues))
         }).catch(error => {

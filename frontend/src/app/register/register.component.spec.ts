@@ -2,7 +2,7 @@ import { LoginComponent } from '../login/login.component'
 import { SecurityAnswerService } from '../Services/security-answer.service'
 import { UserService } from '../Services/user.service'
 import { SecurityQuestionService } from '../Services/security-question.service'
-import { HttpClientModule } from '@angular/common/http'
+import { HttpClientTestingModule } from '@angular/common/http/testing'
 import { async, ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing'
 import { RegisterComponent } from './register.component'
 import { ReactiveFormsModule } from '@angular/forms'
@@ -41,7 +41,7 @@ describe('RegisterComponent', () => {
           { path: 'login', component: LoginComponent }
         ]),
         TranslateModule.forRoot(),
-        HttpClientModule,
+        HttpClientTestingModule,
         ReactiveFormsModule,
         BrowserAnimationsModule,
         MatCardModule,
@@ -111,13 +111,22 @@ describe('RegisterComponent', () => {
   })
 
   it('should be compulsory to repeat the password', () => {
+    component.passwordControl.setValue('a')
     component.repeatPasswordControl.setValue('')
     expect(component.repeatPasswordControl.valid).toBeFalsy()
     component.repeatPasswordControl.setValue('a')
     expect(component.repeatPasswordControl.valid).toBe(true)
   })
 
-  it('')
+  it('password and repeat password should be the same', () => {
+    let password: string = 'aaaaa'
+    let passwordRepeat: string = 'aaaaa'
+    component.passwordControl.setValue(password)
+    component.repeatPasswordControl.setValue('bbbbb')
+    expect(component.repeatPasswordControl.valid).toBeFalsy()
+    component.repeatPasswordControl.setValue(passwordRepeat)
+    expect(component.repeatPasswordControl.valid).toBe(true)
+  })
 
   it('redirects to login page after user registration', fakeAsync(() => {
     userService.save.and.returnValue(of({ id: 1 }))

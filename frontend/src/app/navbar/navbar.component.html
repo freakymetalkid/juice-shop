@@ -6,15 +6,19 @@
     </a>
     <span fxShow fxHide.lt-sm matTooltip="{{version}}" matTooltipPosition="below">{{applicationName}}</span>
 
-    <button mat-icon-button [matMenuTriggerFor]="userMenu">
+    <button mat-icon-button [matMenuTriggerFor]="userMenu" style="vertical-align: middle;">
       <span class="user-info" matTooltip="{{userEmail}}" matTooltipPosition="right" *ngIf="isLoggedIn()">
-        <i class="fas fa-user-circle fa-lg"></i>
+        <img class="avatar" [src]="avatarSrc">
       </span>
     </button>
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="goToProfilePage()" *ngIf="isLoggedIn()">
         <i class="fas fa-user-circle fa-lg"></i>
         {{userEmail}}
+      </button>
+      <button mat-menu-item routerLink="/privacy-security/privacy-policy" *ngIf="isLoggedIn()">
+        <i class="fas fa-user-secret fa-lg"></i>
+        {{ "PRIVACY_AND_SECURITY" | translate }}
       </button>
       <button mat-menu-item routerLink="/recycle" *ngIf="isLoggedIn()">
         <i class="fas fa-recycle fa-lg"></i>
@@ -23,10 +27,6 @@
       <button mat-menu-item routerLink="/track-order" *ngIf="isLoggedIn()">
         <i class="fas fa-map-marker fa-lg"></i>
         {{"TITLE_TRACK_ORDERS" | translate}}
-      </button>
-      <button mat-menu-item routerLink="/change-password" *ngIf="isLoggedIn()">
-        <i class="fas fa-user-secret fa-lg"></i>
-        {{"TITLE_CHANGE_PASSWORD" | translate}}
       </button>
     </mat-menu>
 
@@ -60,20 +60,22 @@
     </button>
 
     <mat-form-field class="language-select" fxShow fxHide.lt-lg>
-      <mat-select [(value)]="selectedLanguage">
+      <div *ngIf="languages">
+        <mat-select [(value)]="selectedLanguage">
 
-        <mat-select-trigger>
-          <span *ngFor="let icon of selectedLanguage.icons" [class]="'flag-icon flag-icon-' + icon"></span>
-          {{selectedLanguage.lang}}
-        </mat-select-trigger>
+          <mat-select-trigger>
+            <span *ngFor="let icon of selectedLanguage.icons" [class]="'flag-icon flag-icon-' + icon"></span>
+            {{selectedLanguage.lang}}
+          </mat-select-trigger>
 
-        <mat-option *ngFor="let language of languages" (click)="changeLanguage(language.key)" [value]="language">
-          <span *ngFor="let icon of language.icons" [class]="'flag-icon flag-icon-' + icon"></span>
-          {{language?.lang}}
-          <i *ngIf="language.isFlask" class="fas fa-flask"></i>
-        </mat-option>
+          <mat-option *ngFor="let language of languages" (click)="changeLanguage(language.key)" [value]="language">
+            <span *ngFor="let icon of language.icons" [class]="'flag-icon flag-icon-' + icon"></span>
+            {{language?.lang}}
+            <i [class]="'fas fa-thermometer-' + language.gauge + (language.percentage > 70 ? ' confirmation' : ' error')"></i>
+          </mat-option>
 
-      </mat-select>
+        </mat-select>
+      </div>
     </mat-form-field>
 
     <span class="fill-remaining-space"></span>
@@ -81,7 +83,7 @@
     <mat-form-field color="accent" class="search-input" floatLabel="never">
       <input matInput id="searchQuery" type="text" placeholder="{{'SEARCH_PLACEHOLDER' | translate}}" #searchControl>
     </mat-form-field>
-    <button id="searchButton" (click)="search(searchControl.value)" mat-icon-button>
+    <button type="submit" id="searchButton" (click)="search(searchControl.value)" mat-icon-button>
       <i class="fas fa-search fa-lg"></i>
     </button>
 
@@ -127,22 +129,23 @@
       <i class="fas fa-shopping-cart fa-lg"></i>
       {{"TITLE_BASKET" | translate}}
     </button>
+    <div *ngIf="languages">
+      <mat-form-field class="language-select">
+        <mat-select [(value)]="selectedLanguage">
 
-    <mat-form-field class="language-select">
-      <mat-select [(value)]="selectedLanguage">
+          <mat-select-trigger>
+            <span *ngFor="let icon of selectedLanguage.icons" [class]="'flag-icon flag-icon-' + icon"></span>
+            {{selectedLanguage.lang}}
+          </mat-select-trigger>
 
-        <mat-select-trigger>
-          <span *ngFor="let icon of selectedLanguage.icons" [class]="'flag-icon flag-icon-' + icon"></span>
-          {{selectedLanguage.lang}}
-        </mat-select-trigger>
+          <mat-option *ngFor="let language of languages" (click)="changeLanguage(language.key)" [value]="language">
+            <span *ngFor="let icon of language.icons" [class]="'flag-icon flag-icon-' + icon"></span>
+            {{language?.lang}}
+            <i [class]="'fas fa-thermometer-' + language.gauge + (language.percentage > 70 ? ' confirmation' : ' error')"></i>
+          </mat-option>
 
-        <mat-option *ngFor="let language of languages" (click)="changeLanguage(language.key)" [value]="language">
-          <span *ngFor="let icon of language.icons" [class]="'flag-icon flag-icon-' + icon"></span>
-          {{language?.lang}}
-          <i *ngIf="language.isFlask" class="fas fa-flask"></i>
-        </mat-option>
-
-      </mat-select>
-    </mat-form-field>
+        </mat-select>
+      </mat-form-field>
+    </div>
   </mat-toolbar-row>
 </mat-toolbar>

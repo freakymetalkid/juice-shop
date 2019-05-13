@@ -1,5 +1,5 @@
 .container {
-  min-width: 380px;
+  min-width: 420px;
   width: 40%;
 }
 
@@ -22,12 +22,20 @@ mat-card {
   margin-left: 20px;
 }
 
+.mat-column-bonus {
+  margin-left: 20px;
+}
+
 .mat-column-price {
   margin-left: 20px;
 }
 
 .mat-column-quantity button mat-button-toggle {
   width: 20px;
+}
+
+.mat-column-quantity button {
+  width: 22px;
 }
 
 mat-form-field {
